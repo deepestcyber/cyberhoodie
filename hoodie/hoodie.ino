@@ -1,5 +1,8 @@
 #include "FastLED.h"
 
+#define PIN_LAYER_0    5
+#define PIN_LAYER_1    4
+
 const unsigned int leds_per_module = 7;
 const unsigned int num_layers = 2;
 const unsigned int modules_per_layer[] = {3, 4};
@@ -38,8 +41,8 @@ void setup() {
   flat_leds[0] = new CRGB[modules_per_layer[0] * leds_per_module];
   flat_leds[1] = new CRGB[modules_per_layer[1] * leds_per_module];
 
-  FastLED.addLeds<NEOPIXEL, 5>(flat_leds[0], modules_per_layer[0] * leds_per_module);
-  FastLED.addLeds<NEOPIXEL, 4>(flat_leds[1], modules_per_layer[1] * leds_per_module);
+  FastLED.addLeds<NEOPIXEL, PIN_LAYER_0>(flat_leds[0], modules_per_layer[0] * leds_per_module);
+  FastLED.addLeds<NEOPIXEL, PIN_LAYER_1>(flat_leds[1], modules_per_layer[1] * leds_per_module);
 
   for (int layer=0; layer < num_layers; layer++) {
     for (int module=0; module < modules_per_layer[layer]; module++) {

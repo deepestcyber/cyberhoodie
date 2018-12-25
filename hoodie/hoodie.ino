@@ -1,7 +1,7 @@
 #include "FastLED.h"
 
 #define PIN_LAYER_0    5
-#define PIN_LAYER_1    4
+#define PIN_LAYER_1    3
 
 const unsigned int leds_per_module = 7;
 const unsigned int num_layers = 2;
@@ -59,10 +59,29 @@ void setup() {
   delay(100);
 }
 
+void fire_neuron(int layer, int module, int state) {
+  CRGB* module_leds = leds_by_module(layer, module);
+  int seq_state = state % 15;
+
+  if (seq_state < 5) {
+    module_leds[0] = CRGB::Blue;
+  } else if (seq_state < 10) {
+    module_leds[0] = CRGB::Black;
+    for (int i=1; i < leds_per_module; i++) {
+      module_leds[i] = CRGB::Red;
+    }
+  } else {
+    for (int i=0; i < leds_per_module; i++) {
+      module_leds[i] = CRGB::Black;
+    }
+  }
+}
+
+
 int state = 0;
 int last_state = state;
 
-void loop() {
+void loop_spinning_wheels() {
   moving_ring(0, 0, last_state, state);
   moving_ring(0, 1, last_state+1, state+1);
   moving_ring(0, 2, last_state+2, state+2);
@@ -78,6 +97,23 @@ void loop() {
   delay(100);
 }
 
+void loop_random_firing() {
+  int layer = random() % 2;
+  int module = random() % modules_per_layer[layer];
+
+  fire_neuron(layer, module, state);
+
+  last_state = state;
+  state = (state + 1) % 256;
+  
+  FastLED.show();
+  delay(100);
+}
+
+void loop() {
+  //loop_spinning_wheels();
+  loop_random_firing();
+}
 
 
 
